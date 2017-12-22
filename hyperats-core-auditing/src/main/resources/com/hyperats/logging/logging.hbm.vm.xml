@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+ "-//Hibernate/Hibernate Mapping DTD//EN"
+ "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="${clazz.name}" entity-name="${entityName}"
+			table="audit_op_log_${entityName}">
+		<id name="id" column="log_id" type="string" length="64"></id>
+		<property name="code" column="op_code" type="string" length="20"></property>
+		<property name="description" column="op_description" type="string" length="200"></property>
+		<property name="userId" column="user_id" type="string" length="64"></property>
+		<property name="userName" column="user_name" type="string" length="200"></property>
+		<property name="resultStatus" column="result_status" type="int"></property>
+		<property name="beginTime" column="begin_time" type="timestamp"></property>
+		<property name="endTime" column="end_time" type="timestamp"></property>
+		<property name="details" column="log_details" type="text"></property>
+		<property name="entityClass" column="entity_class" type="string" length="200"></property>
+		<property name="entityId" column="entity_id" type="string" length="64"></property>
+	</class>
+</hibernate-mapping>

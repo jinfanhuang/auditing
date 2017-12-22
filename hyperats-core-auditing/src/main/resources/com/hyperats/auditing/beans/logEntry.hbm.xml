@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+	<class table="log_entry" name="com.hyperats.auditing.beans.LogEntry">
+		<id name="id" type="long" column="id">
+			<generator class="increment"></generator>
+		</id>
+		<property name="applicationId" type="string" column="application_id" length="200"/>
+		<property name="invokerId" type="string" column="invoker_id" length="200"/>
+		<property name="category" type="string" column="category" length="200"/>
+		<property name="serviceName" type="string" column="service_name" length="200"/>
+		<property name="eventName" type="string" column="event_name" length="200"/>
+		<property name="beginTime" type="long" column="begin_time"/>
+		<property name="endTime" type="long" column="end_time"/>
+		<property name="contentTemplate" type="text" column="content_template"/>
+		<property name="clienAddres" type="string" column="clien_addres" length="200"/>
+		<property name="clientHost" type="string" column="client_host" length="200"/>
+		<property name="exceptionType" type="string" column="exception_type" length="200"/>
+		<property name="exceptionMessage" type="string" column="exception_message" length="200"/>
+		<property name="securityTag" type="string" column="security_tag" length="200"></property>
+		<property name="importance" type="int" column="importance" length="11"></property>
+	</class>
+</hibernate-mapping>

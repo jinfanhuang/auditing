@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+<bean name="h2DataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+	<property name="driverClassName" value="org.h2.Driver"></property>
+	<property name="url" value="jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;INIT=CREATE SCHEMA IF NOT EXISTS TEST\;SET SCHEMA TEST"></property>
+</bean>
+
+<bean name="dynamicMappingSessionFactory"
+	class="com.hyperats.data.h4.LocalDynamicFactoryBuilder">
+	<property name="dataSource" ref="h2DataSource"></property>
+	<property name="mappingLocations">
+		<list>
+			<value>classpath*:com/hyperats/**/*.hbm.xml</value>
+		</list>
+	</property>
+	<property name="hibernateProperties">
+		<props>
+			<prop key="hibernate.dialect">org.hibernate.dialect.H2Dialect</prop>
+			<prop key="hibernate.hbm2ddl.auto">create-drop</prop>
+			<prop key="hibernate.show_sql">true</prop>
+			<prop key="hibernate.format_sql">true</prop>
+			<prop key="hibernate.current_session_context_class">com.hyperats.data.h4.DynamicSessionContext</prop>
+		</props>
+	</property>
+</bean>
+
+<alias name="dynamicMappingSessionFactory" alias="dataSessionFactory"/>
+<alias name="defaultParamProviderCandidates" alias="paramProviderCandidates"/>
+
+<bean name="transactionManagerBean"
+	class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+	<property name="sessionFactory" ref="dynamicMappingSessionFactory" />
+	<property name="dataSource" ref="h2DataSource"></property>
+</bean>
+
+<bean name="transactionInterceptor"
+	class="org.springframework.transaction.interceptor.TransactionInterceptor">
+	<property name="transactionManager" ref="transactionManagerBean" />
+	<property name="transactionAttributes">
+		<props>
+			<prop key="*">PROPAGATION_REQUIRED</prop>
+		</props>
+	</property>
+</bean>
+
+<bean
+	class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">
+	<property name="beanNames">
+		<list>
+			<value>*Service</value>
+			<value>*Manager</value>
+			<value>someOperationLogger</value>
+		</list>
+	</property>
+	<property name="interceptorNames">
+		<list>
+			<value>transactionInterceptor</value>
+		</list>
+	</property>
+</bean>
+
+<bean id="someOperationLogger" parent="abstractOperationLogger">
+	<property name="entityName" value="some_op"></property>
+</bean>
+
+<bean id="someOperationLogManager" parent="abstractOperationLogManager">
+	<property name="entityName" value="some_op"></property>
+</bean>
+
+</beans>
