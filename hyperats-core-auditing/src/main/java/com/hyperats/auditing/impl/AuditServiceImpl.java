@@ -52,6 +52,8 @@ public class AuditServiceImpl implements AuditService{
 		e.setEventName(ae.name());
 		e.setInvokerId(getInvokerId());
 		e.setServiceName(as.name());
+		e.setImportance(as.importance().getImportance());
+		e.setSecurityTag(as.securityTag());
 		return e;
 	}
 
@@ -146,13 +148,9 @@ public class AuditServiceImpl implements AuditService{
 		if(StringUtils.isNotEmpty((String) condition.get("endTime"))) {
 			endTime = Long.parseLong((String) condition.get("endTime"));
 		}
-		
-		if(StringUtils.isEmpty(securityTag)) {
-			cri.add(Restrictions.isNull("securityTag"));
-		}else {
-			cri.add(Restrictions.eq("securityTag", securityTag));
-		}
-		
+		//cri.add(Restrictions.isEmpty("securityTag"));
+		//运行上面代码会出错，因为securityTag不是集合类型；
+		cri.add(Restrictions.eq("securityTag", securityTag));
 		if(StringUtils.isNotEmpty(category)) {
 			cri.add(Restrictions.eq("category", category));
 		}
